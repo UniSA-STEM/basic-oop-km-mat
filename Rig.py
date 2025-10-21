@@ -25,7 +25,7 @@ class Rig:
         self.upgrade_level = 0  #start at 0 upgrade level
         self.max_storage_size = 3 #base capacity at level 0
 
-    def rigrepair(self):
+    def rig_repair(self):
         if self.damage_counter == 0: #check if there is damage to begin with.
             print("No damage detected") #does not proceed with repair if rig has no damage
             return
@@ -90,6 +90,7 @@ class Rig:
         newasset = Asset(name)
         # show name and description of generated asset
         print(f"{self.rig_name} generated {newasset.name} ({newasset.description})!")
+        return True
 
     def store_asset(self, h_asset):
         #check if storage size is full
@@ -98,4 +99,15 @@ class Rig:
             return
         #add new asset to storage
         self.storage.append(h_asset)
-        print(f"{self.rig_name} stored {h_asset.name}")
+        print(f"{self.rig_name} stored {h_asset.name}"
+        return True
+
+    def release_asset(self, h_asset):
+        #return asset back to hacker's inventory
+        for stuff in self.storage:
+            if stuff.name == h_asset.name:
+                self.storage.remove(stuff)
+                return stuff
+        print(f"{self.rig_name} has released {h_asset.name}")
+        return True
+
