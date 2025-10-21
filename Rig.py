@@ -10,7 +10,7 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 import random
 
 from Asset import ASSET_LIBRARY, Asset
-
+from Hacker import
 
 class Rig:
     def __init__(self, rig_name):
@@ -29,14 +29,15 @@ class Rig:
         if self.damage_counter == 0: #check if there is damage to begin with.
             print("No damage detected") #does not proceed with repair if rig has no damage
             return
-        if hacker.cryptotoken < 1: #check if hacker has cryptotoken to use as currency for repair
-            print(f"{hacker.name} Not Enough Cryptotoken to repair {self.rig_name}. Repair is Aborted.")
+        if Hacker.cryptotoken < 1: #check if hacker has cryptotoken to use as currency for repair
+            print(f"{Hacker.name} Not Enough Cryptotoken to repair {self.rig_name}. Repair is Aborted.")
             return
-        hacker.cryptotoken -= 1 #removes one cryptotoken for repair
+        Hacker.cryptotoken -= 1 #removes one cryptotoken for repair
         self.damage_counter = 0 #resets damage counter to 0 upon repair
         self.broken = False     #remove broken status
         print(f"Cryptotoken consumed for repair..."
               f"{self.rig_name} is now fully repaired!")
+        return True
 
     def storage_size(self):   #returns storage size
         return len(self.storage)
@@ -49,22 +50,22 @@ class Rig:
 
     def upgrade(self):  #upgrade the rig
         hardwarepatch = None
-        for stuff in self.storage: #check storage if it has a hardware patch
+        # check storage if it has a hardware patch
+        for stuff in self.storage:
             if stuff.name == "Hardware Patch": hardwarepatch = stuff
             break
-
-        if not hardwarepatch:   #if no hardware patch found, send no patch detected message
+        # if no hardware patch found, send no patch detected message
+        if not hardwarepatch:
             print("No hardware patch detected")
-            return
-
-        self.storage.remove(stuff) #if patch found, remove one hardwarepatch
+            return False
+        # if patch found, remove one hardwarepatch
+        self.storage.remove(stuff)
         self.upgrade_level += 1 #by one
-
         #show updated new stats upon upgrade
         print(f"{self.rig_name} upgraded to Level {self.upgrade_level}!")
         print(f"→ Max Storage increased to {self.max_storage_size} items.")
         print(f"→ Max Durability increased to {self.durability} damage points.")
-
+        return True
 
     def take_damage(self):
         self.damage_counter += 1    #each hit increases damage by 1
@@ -99,7 +100,7 @@ class Rig:
             return
         #add new asset to storage
         self.storage.append(h_asset)
-        print(f"{self.rig_name} stored {h_asset.name}"
+        print(f"{self.rig_name} stored {h_asset.name}")
         return True
 
     def release_asset(self, h_asset):
@@ -111,3 +112,7 @@ class Rig:
         print(f"{self.rig_name} has released {h_asset.name}")
         return True
 
+    def __str__(self):
+        return(f"Rig: {self.rig_name} | {self.condition()} (Level {self.upgrade_level})"
+               f"Storage: {self.durability}/{self.max_durability()}"
+               f"Durability: {self.damage_counter}/{self.max_durability})")

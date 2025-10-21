@@ -6,6 +6,8 @@ ID: 110336447
 Username: matky024
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
+from Rig import Rig
+
 class Hacker:
     def __init__(self, name):
         self.name = name #something cryptic and stylish
@@ -25,7 +27,8 @@ class Hacker:
 
     def launch_data_spike(self, target_name):
         #check if hacker does not have a rig and show message if so
-        if not self.rig: print("You need to acquire a rig.")
+        if not self.rig:
+            print("You need to acquire a rig.")
             return
 
         #call release_asset on rig for a "Data Spike"
@@ -36,10 +39,10 @@ class Hacker:
             return
         self.trace_level += 1
         target_name.rig.take_damage()
-        print(f"{self.name} has attacked {target name}!"
-              f"Trace level is at {self.trace_Level})
+        print(f"{self.name} has attacked {target_name}!"
+              f"Trace level is at {self.trace_Level}")
 
-    def extract_assets(self, target_name):
+    def extract_asset(self, target_name):
         #check if other rig is broken
         if not target_name.rig.broken:
             print("{target_name} is not broken... extraction unsuccessful}")
@@ -58,7 +61,7 @@ class Hacker:
             self.inventory.append(item)
         #create a list of only encrypted items in the target storage
         #replace target rig storage with encrypted only items list
-        target_name.rig.storage [stuff for stuff in target.rig.storage if stuff.encrypted]
+        target_name.rig.storage = [stuff for stuff in target_name.rig.storage if stuff.encrypted]
         print(f"{self.name} has extracted {len(loot)} items from {target_name}")
 
     def encrypt_asset(self, asset_name):
@@ -70,7 +73,7 @@ class Hacker:
                 break
         #if no chip is found, show message
         if not chip:
-            print(f"{self_name} lacks Security Chip")
+            print(f"{self.name} lacks Security Chip")
             return False
         #remove chip from inventory
         self.inventory.remove(chip)
@@ -95,7 +98,7 @@ class Hacker:
                 break
         # if no chip is found, show message
         if not chip:
-            print(f"{self_name} lacks Security Chip")
+            print(f"{self.name} lacks Security Chip")
             return False
         # remove chip from inventory
         self.inventory.remove(chip)
@@ -133,7 +136,7 @@ class Hacker:
             return False
         #check capacity of rig, if full return error message
         if self.rig.storage >= self.rig.max_storage_size():
-            print(f"{self.rig.rig_name}'s storage is full and cannot store {asset_name}"
+            print(f"{self.rig.rig_name}'s storage is full and cannot store {asset_name}")
             return False
         #find item in inventory
         check_asset = None
@@ -162,10 +165,11 @@ class Hacker:
 
     def retrieve_asset(self, asset_name):
         #call release_asset method from rig
-        stuff = rig.release_asset(asset_name)
+        stuff = Rig.release_asset(asset_name)
         #if it fails, show error message
         if not stuff:
-            print(f"{rig.rig_name} does not have {asset_name} in storage.")
+            print(f"{Rig.rig_name} does not have {asset_name} in storage.")
+            return False
         #upon success, add to inventory and show success message
         self.inventory.append(stuff)
         print(f"{self.name} has retrieved {stuff.name}.")
@@ -173,5 +177,5 @@ class Hacker:
 
     def __str__(self):
         rig_name = self.rig_name if self.rig else "None"
-        return (f"Hacker {self.rig_name} | Rig:{rig_name} | Trace {self.trace_level} Tokens: {self.cryptotoken} }
+        return (f"Hacker {self.rig_name} | Rig:{rig_name} | Trace {self.trace_level} Tokens: {self.cryptotoken}")
 
