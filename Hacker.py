@@ -7,7 +7,7 @@ Username: matky024
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 from Rig import Rig
-exposure_threshold = 5 #trace level above this makes hacker exposed
+exposure_threshold = 2 #trace level above this makes hacker exposed
 
 class Hacker:
     def __init__(self, name):
@@ -35,8 +35,13 @@ class Hacker:
         if not self.rig:
             print("You need to acquire a rig.")
             return False
+        #if exposed, do not allow to attack
         if self.exposure():
             print(f"You are EXPOSED (Trace at {self.trace_level}). Cannot do action.")
+            return False
+        #if own rig is broken, do not allow to attack
+        if self.rig.broken:
+            print(f"{self.name}'s rig ({self.rig.rig_name}) is broken and cannot perform attacks.")
             return False
         #call release_asset on rig for a "Data Spike"
         launch_spike = self.rig.release_asset("Data Spike")
@@ -46,8 +51,8 @@ class Hacker:
             return False
         self.trace_level += 1
         target_name.rig.take_damage()
-        print(f"{self.name} has attacked {target_name}!"
-              f"Trace level is at {self.trace_level}")
+        print(f"{self.name} has attacked {target_name.name}! "
+              f"\n{self.name}'s Trace level is at {self.trace_level}")
         return True
 
     def extract_asset(self, target_name):
@@ -68,7 +73,7 @@ class Hacker:
         #create a list of only encrypted items in the target storage
         #replace target rig storage with encrypted only items list
         target_name.rig.storage = [stuff for stuff in target_name.rig.storage if stuff.encrypted]
-        print(f"{self.name} has extracted {len(loot)} items from {target_name}")
+        print(f"{self.name} has extracted {len(loot)} items from {target_name.name}.")
         return True
 
     def encrypt_asset(self, asset_name):
@@ -182,7 +187,14 @@ class Hacker:
         print(f"{self.name} has retrieved {stuff.name}.")
         return True
 
+    def show_inventory(self):
+        print(f"{self.name}'s inventory:")
+        count = 1
+        for asset in self.inventory:
+            print(f" {count}.{asset.name} - {asset.description}")
+            count += 1
+
     def __str__(self):
-        rig_name = self.rig.rig_name if self.rig else "None"
-        return (f"Hacker {self.rig.rig_name} | Rig:{rig_name} | Trace {self.trace_level} Tokens: {self.cryptotoken}")
+        rig_name = self.rig.rig_name if self.rig else "No Rig"
+        return (f"\nHacker {self.rig.rig_name} | Rig:{rig_name} | Trace {self.trace_level} Tokens: {self.cryptotoken}")
 
