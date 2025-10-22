@@ -233,5 +233,6 @@ class Hacker:
 
     def __str__(self):
         rig_name = self.rig.rig_name if self.rig else "No Rig"
-        return (f"\nHacker {self.rig.rig_name} | Rig:{rig_name} | Trace {self.trace_level} Tokens: {self.cryptotoken}")
+        return (f"\nHacker {self.rig.rig_name} | Rig:{rig_name} | "
+                f"Trace {self.trace_level} Tokens: {self.cryptotoken}")
 

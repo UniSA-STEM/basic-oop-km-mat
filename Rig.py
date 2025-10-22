@@ -91,9 +91,11 @@ class Rig:
         if self.damage_counter >= self.durability:  #broken if damage counter exceeds durability
             self.broken = True
             print(f"{self.rig_name} is now broken!")
+            return True
         else:
             print(f"{self.rig_name} has taken 1 damage."
                   f"({self.rig_name} has {self.durability - self.damage_counter}  durability left!")
+            return True
 
     def condition(self):
         condi = "Broken" if self.broken else "Pristine: " #
@@ -115,7 +117,7 @@ class Rig:
         #check if storage size is full
         if self.storage_size() >= self.max_capacity():
             print(f"{self.rig_name}'s storage capacity is full")
-            return
+            return False
         #add new asset to storage
         self.storage.append(asset_name)
         print(f"{self.rig_name} stored {asset_name.name}")
