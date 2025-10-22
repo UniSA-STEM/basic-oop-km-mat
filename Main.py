@@ -62,11 +62,11 @@ def main():
 
     #generate asset
     print("\nGenerate Asset")
+    player.rig.show_storage()
     player.rig.generate_asset()
     player.rig.generate_asset()
 
     #show inventory after generate asset
-    player.show_inventory()
     player.rig.show_storage()
 
     #upgrade rig
@@ -80,10 +80,10 @@ def main():
     #test encryption. give player data spikes
     print("\nEncryption")
     player.inventory.append(sc)
+    player.inventory.append(sc)
     player.inventory.append(ds)
     player.show_inventory()
 
-    print(player.rig)
     player.encrypt_asset(ds)
     player.decrypt_asset(ds)
 
