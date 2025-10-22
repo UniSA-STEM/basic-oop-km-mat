@@ -13,6 +13,12 @@ from Rig import Rig
 
 def main():
 
+    ct = Asset("CryptoToken")
+    ds = Asset("Data Spike")
+    rd = Asset("Removable Drive")
+    sc = Asset("Security Chip")
+    hp = Asset("Hardware Patch")
+
     print("START")
 
     #create players
@@ -54,5 +60,33 @@ def main():
     player.show_inventory()
     player.rig.show_storage()
 
+    #generate asset
+    print("\nGenerate Asset")
+    player.rig.generate_asset()
+    player.rig.generate_asset()
+
+    #show inventory after generate asset
+    player.show_inventory()
+    player.rig.show_storage()
+
+    #upgrade rig
+    print("\nUpgrade Rig")
+    player.inventory.append(hp)
+    player.show_inventory()
+    player.upgrade_rig()
+    player.show_inventory()
+    print(player.rig)
+
+    #test encryption. give player data spikes
+    print("\nEncryption")
+    player.inventory.append(sc)
+    player.inventory.append(ds)
+    player.show_inventory()
+
+    print(player.rig)
+    player.encrypt_asset(ds)
+    player.decrypt_asset(ds)
+
+    player.show_inventory()
 if __name__ == "__main__":
     main()

@@ -77,54 +77,91 @@ class Hacker:
         return True
 
     def encrypt_asset(self, asset_name):
-        #look for security chip
+        #look for security chip in inventory
+        asset_name = asset_name.name
         chip = None
+        chip_location = None
         for stuff in self.inventory:
             if stuff.name == "Security Chip":
                 chip = stuff
+                chip_location = "inventory"
+                break
+        for stuff in self.rig.storage:
+            if stuff.name == "Security Chip":
+                chip = stuff
+                chip_location = "storage"
                 break
         #if no chip is found, show message
         if not chip:
             print(f"{self.name} lacks Security Chip")
             return False
-        #remove chip from inventory
-        self.inventory.remove(chip)
-        #encrypt selected item
+
+        #target asset check inventory
+        target_asset = None
         for stuff in self.inventory:
             if stuff.name == asset_name:
-                stuff.encrypt()
-                print(f"{stuff.asset_name} encrypted.")
-                return True
-        #if for whatever reason the target asset is not found, add chip back in
-        if chip is not None:
-            self.inventory.append(chip)
-        print("Asset not found, chip returned.")
+                target_asset = stuff
+                break
+
+        #if asset not found, cancel
+        if not target_asset:
+            print(f"{asset_name} not found.")
+            return False
+
+        #remove chip
+        if chip_location == "inventory":
+            self.inventory.remove(chip)
+        else:
+            self.rig.storage.remove(chip)
+
+        #encrypt selected item
+        target_asset.encrypt()
+        print(f"{asset_name} has been encrypted using a Security Chip found in {chip_location}.")
         return False
 
     def decrypt_asset(self, asset_name):
-        # look for security chip
+        #look for security chip in inventory
+        asset_name = asset_name.name
         chip = None
+        chip_location = None
         for stuff in self.inventory:
             if stuff.name == "Security Chip":
                 chip = stuff
+                chip_location = "inventory"
                 break
-        # if no chip is found, show message
+        for stuff in self.rig.storage:
+            if stuff.name == "Security Chip":
+                chip = stuff
+                chip_location = "storage"
+                break
+        #if no chip is found, show message
         if not chip:
             print(f"{self.name} lacks Security Chip")
             return False
-        # remove chip from inventory
-        self.inventory.remove(chip)
-        # encrypt selected item
+
+        #target asset check inventory
+        target_asset = None
         for stuff in self.inventory:
             if stuff.name == asset_name:
-                stuff.decrypt()
-                print(f"{stuff.asset_name} decrypted.")
-                return True
-        # if for whatever reason the target asset is not found, add chip back in
-        if chip is not None:
-            self.inventory.append(chip)
-        print("Asset not found, chip returned.")
+                target_asset = stuff
+                break
+
+        #if asset not found, cancel
+        if not target_asset:
+            print(f"{asset_name} not found.")
+            return False
+
+        #remove chip
+        if chip_location == "inventory":
+            self.inventory.remove(chip)
+        else:
+            self.rig.storage.remove(chip)
+
+        #decrypt selected item
+        target_asset.decrypt()
+        print(f"{asset_name} has been decrypted using a Security Chip found in {chip_location}.")
         return False
+
 
     def upgrade_rig(self):
         #if hacker has no rig, show error message

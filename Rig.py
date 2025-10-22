@@ -48,24 +48,36 @@ class Rig:
     def max_durability(self):       #increase max durability along with upgrade level
         return self.durability + self.upgrade_level
 
-    def upgrade(self):  #upgrade the rig
+    def upgrade(self, hacker):  #upgrade the rig
         hardwarepatch = None
+        found_in_inventory = False
         # check storage if it has a hardware patch
         for stuff in self.storage:
             if stuff.name == "Hardware Patch":
                 hardwarepatch = stuff
                 break
+        #check hacker inventory if it has hardware patch
+        for stuff in hacker.inventory:
+            if stuff.name == "Hardware Patch":
+                hardwarepatch = stuff
+                found_in_inventory = True
+                break
         # if no hardware patch found, send no patch detected message
         if not hardwarepatch:
-            print("No hardware patch detected")
+            print("No hardware patch detected. Upgrade discontinued.")
             return False
         # if patch found, remove one hardwarepatch
-        self.storage.remove(hardwarepatch)
+        if found_in_inventory:
+            hacker.inventory.remove(hardwarepatch)
+            print(f"Hardware patch removed from {hacker.name}'s inventory.")
+        else:
+            self.storage.remove(hardwarepatch)
+            print(f"Hardware patch removed from {self.rig_name}'s storage.")
         self.upgrade_level += 1 #by one
         #show updated new stats upon upgrade
         print(f"{self.rig_name} upgraded to Level {self.upgrade_level}!")
         print(f"→ Max Storage increased to {self.max_storage_size} items.")
-        print(f"→ Max Durability increased to {self.durability} damage points.")
+        print(f"→ Max Durability increased to {self.max_durability()} damage points.")
         return True
 
     def take_damage(self):
@@ -94,6 +106,7 @@ class Rig:
         # fetch a random tuple in library as generated asset
         name, description = random.choice(ASSET_LIBRARY)
         newasset = Asset(name)
+        self.storage.append(newasset)
         # show name and description of generated asset
         print(f"{self.rig_name} generated {newasset.name} ({newasset.description})!")
         return True
@@ -130,5 +143,5 @@ class Rig:
             count += 1
 
     def __str__(self):
-        return(f"\nRig: {self.rig_name}  | {self.condition()}  |  Durability: {self.max_durability()} "
+        return(f"\nRig: {self.rig_name}  | {self.condition()}  |  Durability: {self.max_durability()} | "
                f"Storage: {self.storage_size()}/{self.max_storage_size} ")
