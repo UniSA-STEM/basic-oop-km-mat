@@ -7,6 +7,7 @@ Username: matky024
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 from Rig import Rig
+exposure_threshold = 5 #trace level above this makes hacker exposed
 
 class Hacker:
     def __init__(self, name):
@@ -15,45 +16,50 @@ class Hacker:
         self.cryptotoken = 1 #always start with one
         self.rig = None #no rig to start with
         self.trace_level = 0 #Hackers have a trace level, which starts at 0 and increases when they perform risky actions
-        self.exposed = False #If the trace level exceeds a threshold(e.g., 5), the hacker becomes exposed,
+
+    def exposure(self):
+        #test whether trace level exceeds exposure threshold
+        return self.trace_level >= exposure_threshold
 
     def acquire_rig(self, rig_name):
         if self.cryptotoken < 1:  #check CryptoToken Count
             print("You need to acquire a rig.") #if not enough token, display fail message and end method
-            return
+            return False
         self.cryptotoken -= 1 #remove one token counter prior to activation
         self.rig = Rig(rig_name) #calls Rig class
         print("{self.name} Rig Acquired and now ACTIVE") #. print a message announcing the acquisition
+        return True
 
     def launch_data_spike(self, target_name):
         #check if hacker does not have a rig and show message if so
         if not self.rig:
             print("You need to acquire a rig.")
-            return
-
+            return False
+        if self.exposure():
+            print(f"You are EXPOSED (Trace at {self.trace_level}). Cannot do action.")
+            return False
         #call release_asset on rig for a "Data Spike"
         launch_spike = self.rig.release_asset("Data Spike")
         #check if spike returns true, else no data spike message
         if not launch_spike:
             print("You have no Data Spikes left!")
-            return
+            return False
         self.trace_level += 1
         target_name.rig.take_damage()
         print(f"{self.name} has attacked {target_name}!"
-              f"Trace level is at {self.trace_Level}")
+              f"Trace level is at {self.trace_level}")
+        return True
 
     def extract_asset(self, target_name):
         #check if other rig is broken
         if not target_name.rig.broken:
             print("{target_name} is not broken... extraction unsuccessful}")
-            return
-
+            return False
         #check for removable drive in broken rig, if not, show no removable drive message
         removable_drive = self.rig.release_asset("Removable Drive")
         if not removable_drive:
             print("{target_name} has no Removable Drive")
-            return
-
+            return False
         #make a list of things in rig that are not enccrypted
         loot = [stuff for stuff in target_name.rig.storage if not stuff.encrypted]
         #if there is, add to own inventory
@@ -63,6 +69,7 @@ class Hacker:
         #replace target rig storage with encrypted only items list
         target_name.rig.storage = [stuff for stuff in target_name.rig.storage if stuff.encrypted]
         print(f"{self.name} has extracted {len(loot)} items from {target_name}")
+        return True
 
     def encrypt_asset(self, asset_name):
         #look for security chip
@@ -165,10 +172,10 @@ class Hacker:
 
     def retrieve_asset(self, asset_name):
         #call release_asset method from rig
-        stuff = Rig.release_asset(asset_name)
+        stuff = self.rig.release_asset(asset_name)
         #if it fails, show error message
         if not stuff:
-            print(f"{Rig.rig_name} does not have {asset_name} in storage.")
+            print(f"{self.rig.rig_name} does not have {asset_name} in storage.")
             return False
         #upon success, add to inventory and show success message
         self.inventory.append(stuff)
@@ -176,6 +183,6 @@ class Hacker:
         return True
 
     def __str__(self):
-        rig_name = self.rig_name if self.rig else "None"
-        return (f"Hacker {self.rig_name} | Rig:{rig_name} | Trace {self.trace_level} Tokens: {self.cryptotoken}")
+        rig_name = self.rig.rig_name if self.rig else "None"
+        return (f"Hacker {self.rig.rig_name} | Rig:{rig_name} | Trace {self.trace_level} Tokens: {self.cryptotoken}")
 

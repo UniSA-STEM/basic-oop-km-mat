@@ -7,4 +7,11 @@ Username: matky024
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 
-main to be added
+from Hacker import Hacker
+from Asset import Asset
+from Rig import Rig
+
+if __name__ == "__main__":
+    player = Hacker("Player")
+    NPC = Hacker("NPC")
+

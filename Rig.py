@@ -10,7 +10,7 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 import random
 
 from Asset import ASSET_LIBRARY, Asset
-from Hacker import
+
 
 class Rig:
     def __init__(self, rig_name):
@@ -25,7 +25,7 @@ class Rig:
         self.upgrade_level = 0  #start at 0 upgrade level
         self.max_storage_size = 3 #base capacity at level 0
 
-    def rig_repair(self):
+    def rig_repair(self, Hacker):
         if self.damage_counter == 0: #check if there is damage to begin with.
             print("No damage detected") #does not proceed with repair if rig has no damage
             return
@@ -52,14 +52,15 @@ class Rig:
         hardwarepatch = None
         # check storage if it has a hardware patch
         for stuff in self.storage:
-            if stuff.name == "Hardware Patch": hardwarepatch = stuff
-            break
+            if stuff.name == "Hardware Patch":
+                hardwarepatch = stuff
+                break
         # if no hardware patch found, send no patch detected message
         if not hardwarepatch:
             print("No hardware patch detected")
             return False
         # if patch found, remove one hardwarepatch
-        self.storage.remove(stuff)
+        self.storage.remove(hardwarepatch)
         self.upgrade_level += 1 #by one
         #show updated new stats upon upgrade
         print(f"{self.rig_name} upgraded to Level {self.upgrade_level}!")
@@ -68,7 +69,7 @@ class Rig:
         return True
 
     def take_damage(self):
-        self.damage_counter += 1    #each hit increases damage by 1
+        self.damage_counter += 1    #each hit increases damage by 1 w
 
         # assess broken status
         if self.damage_counter >= self.durability:  #broken if damage counter exceeds durability
@@ -83,7 +84,7 @@ class Rig:
         return f"{condi} {self.damage_counter} damage (Level {self.upgrade_level})"
 
     def generate_asset(self):
-        if self.storage_size() >= self.max_capacity():
+        if self.storage_size >= self.max_capacity:
             print(f"{self.rig_name}'s storage capacity is full")
             return
         # fetch a random tuple in library as generated asset

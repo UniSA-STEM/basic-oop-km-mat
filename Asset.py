@@ -16,10 +16,10 @@ ASSET_LIBRARY = [ #define library in a list
 
 class Asset:
 
-    def __init__(self, name, description, encrypted = False): #By default, assets are not encrypted.
+    def __init__(self, name, description = "Unknown", encrypted = False): #By default, assets are not encrypted.
         self.name = name
         self.encrypted = encrypted #
-        self.description = ("Unknown") #initiate description as unknown then
+        self.description = description #initiate description as unknown then
         for n, desc in ASSET_LIBRARY:  #loop through asset list to fetch description from tuple  
             if n == name:
                 self.description = desc
