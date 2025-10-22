@@ -13,9 +13,9 @@ from Rig import Rig
 
 def main():
 
-    ct = Asset("CryptoToken")
+#    ct = Asset("CryptoToken")
     ds = Asset("Data Spike")
-    rd = Asset("Removable Drive")
+#    rd = Asset("Removable Drive")
     sc = Asset("Security Chip")
     hp = Asset("Hardware Patch")
 
